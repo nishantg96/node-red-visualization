@@ -1,0 +1,772 @@
+[
+    {
+        "id": "1132fe61.c242a2",
+        "type": "tcp out",
+        "z": "b8247c9c.e5667",
+        "host": "10.10.14.112",
+        "port": "5577",
+        "beserver": "client",
+        "base64": true,
+        "end": true,
+        "name": "",
+        "x": 1070,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "8a677248.bcb58",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "on",
+        "func": "msg.payload = new Buffer([0x71,0x23,0x0F,0xA3]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 591,
+        "y": 202,
+        "wires": [
+            [
+                "1132fe61.c242a2"
+            ]
+        ]
+    },
+    {
+        "id": "3100d5f3.bf5c8a",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "off",
+        "func": "msg.payload = new Buffer([0x71,0x24,0x0F,0xA4]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 592.5,
+        "y": 249,
+        "wires": [
+            [
+                "1132fe61.c242a2"
+            ]
+        ]
+    },
+    {
+        "id": "78094cd1.b875a4",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "RGB(0, 0, 255)",
+        "func": "msg.payload = new Buffer([0x31,0x00,0x00,0xFF,0x00,0x00,0xF0,0x0F,0x2F]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 540,
+        "y": 300,
+        "wires": [
+            [
+                "1132fe61.c242a2"
+            ]
+        ]
+    },
+    {
+        "id": "aac8b5e3.901ba8",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "RGB(100, 100, 100)",
+        "func": "msg.payload = new Buffer([0x31,0xFF,0xFF,0xFF,0x00,0x00,0xF0,0x0F,0x2D]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 480,
+        "y": 340,
+        "wires": [
+            [
+                "1132fe61.c242a2"
+            ]
+        ]
+    },
+    {
+        "id": "2dfc5710.0ac018",
+        "type": "ui_button",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "group": "b2563769.5cef98",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Turn On",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 180,
+        "y": 200,
+        "wires": [
+            [
+                "8a677248.bcb58"
+            ]
+        ]
+    },
+    {
+        "id": "e36fce09.7aa6e",
+        "type": "ui_button",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "group": "b2563769.5cef98",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Turn Off",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 180,
+        "y": 240,
+        "wires": [
+            [
+                "3100d5f3.bf5c8a"
+            ]
+        ]
+    },
+    {
+        "id": "e760f916.6d6d08",
+        "type": "ui_button",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "group": "b2563769.5cef98",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Green",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 170,
+        "y": 280,
+        "wires": [
+            [
+                "78094cd1.b875a4"
+            ]
+        ]
+    },
+    {
+        "id": "42f97f83.fec9a",
+        "type": "ui_button",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "group": "b2563769.5cef98",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "White",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 170,
+        "y": 320,
+        "wires": [
+            [
+                "aac8b5e3.901ba8"
+            ]
+        ]
+    },
+    {
+        "id": "8144cd00.dfaf8",
+        "type": "comment",
+        "z": "b8247c9c.e5667",
+        "name": "Dashboard buttons",
+        "info": "",
+        "x": 210,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "af1bbfb6.4802b",
+        "type": "comment",
+        "z": "b8247c9c.e5667",
+        "name": "Functions to send buffers to the LEDs",
+        "info": "",
+        "x": 640,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "cfe7bf1f.6ac91",
+        "type": "comment",
+        "z": "b8247c9c.e5667",
+        "name": "TCP output",
+        "info": "",
+        "x": 1070,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6cb94fb6.c1723",
+        "type": "ui_button",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "group": "b2563769.5cef98",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Red",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 170,
+        "y": 380,
+        "wires": [
+            [
+                "79cec529.8d3b4c"
+            ]
+        ]
+    },
+    {
+        "id": "79cec529.8d3b4c",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "RGB(0,255,0)",
+        "func": "msg.payload = new Buffer([0x31,0x00,0xFF,0x00,0x00,0x00,0xF0,0x0F,0x2F]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 480,
+        "y": 380,
+        "wires": [
+            [
+                "1132fe61.c242a2"
+            ]
+        ]
+    },
+    {
+        "id": "db985133.6e07b",
+        "type": "ui_button",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "group": "b2563769.5cef98",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Blue",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 170,
+        "y": 440,
+        "wires": [
+            [
+                "6bebb15a.f08d1"
+            ]
+        ]
+    },
+    {
+        "id": "6bebb15a.f08d1",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "RGB(255,0,0)",
+        "func": "msg.payload = new Buffer([0x31,0xFF,0x00,0x00,0x00,0x00,0xF0,0x0F,0x2F]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 460,
+        "y": 440,
+        "wires": [
+            [
+                "1132fe61.c242a2"
+            ]
+        ]
+    },
+    {
+        "id": "51bd3f62.fe832",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "RGB(Purple)",
+        "func": "msg.payload = new Buffer([0x31,0xFF,0xFF,0x00,0x00,0x00,0xF0,0x0F,0x2E]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 460,
+        "y": 480,
+        "wires": [
+            [
+                "1132fe61.c242a2"
+            ]
+        ]
+    },
+    {
+        "id": "27f95e9.7f9fba2",
+        "type": "ui_colour_picker",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "label": "Color Picker",
+        "group": "9c8f35e7.295078",
+        "format": "rgb",
+        "outformat": "string",
+        "showSwatch": true,
+        "showPicker": true,
+        "showValue": true,
+        "showAlpha": true,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 170,
+        "y": 620,
+        "wires": [
+            [
+                "61f77ab8.58f2d4"
+            ]
+        ]
+    },
+    {
+        "id": "b112eab6.190548",
+        "type": "debug",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1280,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "61f77ab8.58f2d4",
+        "type": "change",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "rgb(",
+                "fromt": "str",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": ")",
+                "fromt": "str",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 450,
+        "y": 620,
+        "wires": [
+            [
+                "c53804e9.c39c28"
+            ]
+        ]
+    },
+    {
+        "id": "44f98cf.14e3974",
+        "type": "debug",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1280,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "c53804e9.c39c28",
+        "type": "split",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 630,
+        "y": 620,
+        "wires": [
+            [
+                "864eea0a.a2b558"
+            ]
+        ]
+    },
+    {
+        "id": "864eea0a.a2b558",
+        "type": "join",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 770,
+        "y": 620,
+        "wires": [
+            [
+                "a379acc0.ce8d1"
+            ]
+        ]
+    },
+    {
+        "id": "4ffd739e.35005c",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "rainbow effect",
+        "func": "var numberOfLEDs = 10;\n\nfor(i=0; i<255; i++){\n    \n    for(j=0; j<numberOfLEDs; j++){\n        \n        var pos = 0;\n        pos = Math.round(((j*255/numberOfLEDs)+i))&255;\n        \n        if(pos<85){\n            var red = pos*3;\n            var green = 255-pos*3;\n            var blue = 0;\n        }\n        else if(pos < 170){\n            pos -= 85;\n            var red = 255 - pos*3;\n            var green = 0;\n            var blue = pos*3;\n        }\n        else{\n            pos -= 170;\n            var red = 0;\n            var green = pos*3;\n            var blue = 255-pos*3;\n        }\n        var setColor = j+','+ red +','+ green +','+ blue;\n        node.send({payload:setColor});\n    }\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 260,
+        "y": 720,
+        "wires": [
+            [
+                "8022eb60.e31f68"
+            ]
+        ]
+    },
+    {
+        "id": "a379acc0.ce8d1",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "Checksum and send buffer",
+        "func": "\nvar R = parseInt(msg.payload[0]);\nvar G = parseInt(msg.payload[1]);\nvar B = parseInt(msg.payload[2]);\nvar sum = 0;\nvar checksum = 0;\nsum =  G + B  + R + 49 + 240 + 15 ;\nchecksum =  (sum % 256)  ;\nmsg.payload = new Buffer ([49,B,R,G,0,0,240,15,checksum]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 830,
+        "y": 520,
+        "wires": [
+            [
+                "1132fe61.c242a2",
+                "44f98cf.14e3974"
+            ]
+        ]
+    },
+    {
+        "id": "50a97768.39c388",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "set color",
+        "func": "var count = global.get('count')||0;\nmsg.payload = msg.payload.replace(/[rgb()\\s]/g,\"\");\nif(count===0){\n    msg.payload = msg.payload;\n}\nelse{\n    msg.payload = (count-1) + \",\" + msg.payload;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1300,
+        "y": 480,
+        "wires": [
+            [
+                "b112eab6.190548"
+            ]
+        ]
+    },
+    {
+        "id": "8022eb60.e31f68",
+        "type": "delay",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "0.1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 460,
+        "y": 720,
+        "wires": [
+            [
+                "808b848e.f088e8"
+            ]
+        ]
+    },
+    {
+        "id": "808b848e.f088e8",
+        "type": "change",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "rules": [
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "rgb(",
+                "fromt": "str",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": ")",
+                "fromt": "str",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 720,
+        "wires": [
+            [
+                "68b9d1ff.2d8b7"
+            ]
+        ]
+    },
+    {
+        "id": "68b9d1ff.2d8b7",
+        "type": "split",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "splt": ",",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 850,
+        "y": 720,
+        "wires": [
+            [
+                "87ed8f37.4343"
+            ]
+        ]
+    },
+    {
+        "id": "87ed8f37.4343",
+        "type": "join",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1010,
+        "y": 720,
+        "wires": [
+            [
+                "66d63590.70589c"
+            ]
+        ]
+    },
+    {
+        "id": "66d63590.70589c",
+        "type": "function",
+        "z": "b8247c9c.e5667",
+        "name": "Parser",
+        "func": "\nvar P = parseInt(msg.payload[0]);\nvar R = parseInt(msg.payload[1]);\nvar G = parseInt(msg.payload[2]);\nvar B = parseInt(msg.payload[3]);\nvar sum = 0;\nvar checksum = 0;\nsum =  G + B  + R + 49 + 240 + 15 ;\nchecksum =  (sum % 256)  ;\nmsg.payload = new Buffer ([49,B,R,G,0,0,240,15,checksum]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1190,
+        "y": 720,
+        "wires": [
+            [
+                "1132fe61.c242a2",
+                "b112eab6.190548"
+            ]
+        ]
+    },
+    {
+        "id": "204a3392.7c89dc",
+        "type": "ui_button",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "group": "9c8f35e7.295078",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "rainbow",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 80,
+        "y": 720,
+        "wires": [
+            [
+                "4ffd739e.35005c"
+            ]
+        ]
+    },
+    {
+        "id": "d58ca74d.b99ba8",
+        "type": "ui_dropdown",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "label": "Select color",
+        "place": "Select option",
+        "group": "b2563769.5cef98",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "options": [
+            {
+                "label": "Green",
+                "value": "0,255,0",
+                "type": "str"
+            },
+            {
+                "label": "Red",
+                "value": "255,0,0",
+                "type": "str"
+            },
+            {
+                "label": "Blue",
+                "value": "0,0,255",
+                "type": "str"
+            },
+            {
+                "label": "Purple",
+                "value": "255,0,255",
+                "type": "str"
+            },
+            {
+                "label": "Yellow",
+                "value": "255,255,0",
+                "type": "str"
+            },
+            {
+                "label": "Silver",
+                "value": "192,192,192",
+                "type": "str"
+            },
+            {
+                "label": "Orange",
+                "value": "255,165,0",
+                "type": "str"
+            },
+            {
+                "label": "Pink",
+                "value": "255,20,147",
+                "type": "str"
+            },
+            {
+                "label": "Salmon",
+                "value": "250,128,114",
+                "type": "str"
+            },
+            {
+                "label": "Light sea Green",
+                "value": "32,178,170",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "",
+        "x": 160,
+        "y": 560,
+        "wires": [
+            [
+                "61f77ab8.58f2d4"
+            ]
+        ]
+    },
+    {
+        "id": "756a6e85.dc2fb",
+        "type": "inject",
+        "z": "b8247c9c.e5667",
+        "name": "",
+        "topic": "reset",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 240,
+        "y": 760,
+        "wires": [
+            [
+                "8022eb60.e31f68"
+            ]
+        ]
+    },
+    {
+        "id": "b2563769.5cef98",
+        "type": "ui_group",
+        "z": "",
+        "name": "Basics",
+        "tab": "828c3615.616ae8",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "9c8f35e7.295078",
+        "type": "ui_group",
+        "z": "",
+        "name": "Control",
+        "tab": "828c3615.616ae8",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "828c3615.616ae8",
+        "type": "ui_tab",
+        "z": "",
+        "name": "LED-Controller",
+        "icon": "dashboard",
+        "order": 1
+    }
+]

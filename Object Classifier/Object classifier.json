@@ -1,0 +1,364 @@
+[
+    {
+        "id": "916196d7.ca91c",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "5f3101ac.c1b6d8",
+        "type": "inject",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "5c228d88.801cac"
+            ]
+        ]
+    },
+    {
+        "id": "5c228d88.801cac",
+        "type": "http request",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "method": "GET",
+        "ret": "bin",
+        "paytoqs": "ignore",
+        "url": "******IP CAMERA ADDRESS HERE*****/photo.jpg",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "21e32256.0d068e"
+            ]
+        ]
+    },
+    {
+        "id": "21e32256.0d068e",
+        "type": "visual-recognition-v3",
+        "z": "916196d7.ca91c",
+        "name": "Object Detection",
+        "vr-service-endpoint": "**************ENDPOINT HERE************************",
+        "image-feature": "classifyImage",
+        "lang": "en",
+        "x": 720,
+        "y": 300,
+        "wires": [
+            [
+                "d0d524fe.f2ddf",
+                "7310de51.979"
+            ]
+        ]
+    },
+    {
+        "id": "d0d524fe.f2ddf",
+        "type": "debug",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "result.images[0].classifiers[0].classes",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "7310de51.979",
+        "type": "function",
+        "z": "916196d7.ca91c",
+        "name": "Set Payload",
+        "func": "msg.payload = msg.result.images[0].classifiers[0].classes;\nmsg.topic = \"Object detection\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 950,
+        "y": 380,
+        "wires": [
+            [
+                "f64c31dd.0e7108"
+            ]
+        ]
+    },
+    {
+        "id": "f64c31dd.0e7108",
+        "type": "template",
+        "z": "916196d7.ca91c",
+        "name": "Tablular format",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<table border=\"1\">\n    \n    \n    <thead>\n        <tr>\n            <th colspan=\"2\">{{topic}}</th>\n        </tr>\n    </thead>\n    \n    \n    <tr>\n        <th>Class</th>\n        <th>Score</th>\n    </tr>\n    {{#payload}}\n        <tr class=\"\">\n            <td>{{class}}</td>            \n            <td>{{score}}</td>\n        </tr>\n    {{/payload}}\n</table>\n",
+        "output": "str",
+        "x": 1140,
+        "y": 380,
+        "wires": [
+            [
+                "ab1fb84c.fbafd",
+                "d10bea93.df8088"
+            ]
+        ]
+    },
+    {
+        "id": "ab1fb84c.fbafd",
+        "type": "ui_template",
+        "z": "916196d7.ca91c",
+        "group": "e8cc6e6f.893488",
+        "name": "IP Camera",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<img src=\"http://******IP ADDRESS HERE******/video\" alt=\"http://******IP ADDRESS HERE******/video\" >\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 990,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1780163e.c650ba",
+        "type": "ui_button",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "group": "e8cc6e6f.893488",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Detect Object from video stream",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 190,
+        "y": 240,
+        "wires": [
+            [
+                "5c228d88.801cac"
+            ]
+        ]
+    },
+    {
+        "id": "2e3d097e.ea1236",
+        "type": "ui_webcam",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "group": "e8cc6e6f.893488",
+        "order": 2,
+        "width": 0,
+        "height": 5,
+        "countdown": false,
+        "autoStart": true,
+        "hideCaptureButton": false,
+        "showImage": "2",
+        "format": "jpeg",
+        "x": 120,
+        "y": 400,
+        "wires": [
+            [
+                "21e32256.0d068e",
+                "999468db.cbbe9"
+            ]
+        ]
+    },
+    {
+        "id": "999468db.cbbe9",
+        "type": "ui_text",
+        "z": "916196d7.ca91c",
+        "group": "e8cc6e6f.893488",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "name": "",
+        "label": "Click camera icon in the webcam stream to detect object from it!",
+        "format": "",
+        "layout": "col-center",
+        "x": 290,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d10bea93.df8088",
+        "type": "ui_template",
+        "z": "916196d7.ca91c",
+        "group": "415e2b3.80cfdd4",
+        "name": "Output",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "format": "<h1>OUTPUT</h1>\n<div ng-bind-html=\"msg.payload\" height=\"200\" style=\"height: 200px;\"></div>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 1200,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "81038f11.b67f7",
+        "type": "ui_template",
+        "z": "916196d7.ca91c",
+        "group": "3d882eae.376e82",
+        "name": "fileInput",
+        "order": 0,
+        "width": "6",
+        "height": "1",
+        "format": "<div class=\"fileContainer\">\n    <input type=\"file\" name=\"file\" id=\"file\" class=\"inputfile\" />\n    <label for=\"file\">File</label>\n    <p style=\"margin:auto\" id=\"fileName\"></p>\n    <button class=\"vibrate filled touched smallfont rounded greybuttons\" ng-click=\"clear()\"> \n       <ng-md-icon style=\"color: #fff;\" icon=\"clear\">\n            <md-tooltip md-direction=\"bottom\">Clear</md-tooltip>\n        </ng-md-icon>\n    </button> \n</div>\n\n<style>\n    .fileContainer {\n        display: flex;\n    }\n    .inputfile {\n\twidth: 0.1px;\n\theight: 0.1px;\n\topacity: 0;\n\toverflow: hidden;\n\tposition: absolute;\n\tz-index: -1;\n}\n\n.inputfile + label {\n    font-size: 1.25em;\n    font-weight: 700;\n    color: white;\n    text-align: center;\n    padding: 5px;\n    width: 60px;\n    background-color: black;\n}\n\n.inputfile:focus + label,\n.inputfile + label:hover {\n    background-color: red;\n}\n\n.inputfile + label {\n\tcursor: pointer; /* \"hand\" cursor */\n}\n\n.inputfile:focus + label {\n\toutline: 1px dotted #000;\n\toutline: -webkit-focus-ring-color auto 5px;\n}\n\n.inputfile + label * {\n\tpointer-events: none;\n}\n\n</style>\n\n<script>\n(function(scope) {\n   var fileInput = $('#file')\n   var fileName = $('#fileName')\n   \n   scope.clear = function() {\n       fileInput.val('').trigger('change')\n   }\n   \n   fileInput.on('change', function(event) {\n        var file = fileInput[0].files[0]; \n        \n        fileName.text(file ? file.name : '')\n        \n        if(file) {\n       \n            var reader = new FileReader();\n            reader.readAsBinaryString(file);\n        \n            reader.onload = function() {\n                scope.send({payload: reader.result, file: file.name})\n            };\n            reader.onerror = function() {\n                console.log('Error while reading files');\n            };\n        } else\n            scope.send({payload: null})\n   })\n    \n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": false,
+        "templateScope": "local",
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "dabb4a71.f8b6e8"
+            ]
+        ]
+    },
+    {
+        "id": "dabb4a71.f8b6e8",
+        "type": "function",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "func": "var toDelete = !msg.payload\n\nif(!toDelete) {\n    var buffer = new Buffer(msg.payload, \"binary\");\n    node.send({topic: 'create', payload: buffer, filename: 'files/' + msg.file})\n    flow.set('file', msg.file.name)\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 260,
+        "y": 100,
+        "wires": [
+            [
+                "6d97ce52.003d7"
+            ]
+        ]
+    },
+    {
+        "id": "6d97ce52.003d7",
+        "type": "file",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 410,
+        "y": 100,
+        "wires": [
+            [
+                "21e32256.0d068e"
+            ]
+        ]
+    },
+    {
+        "id": "6841b46f.124ccc",
+        "type": "comment",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "info": "",
+        "x": 120,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "748be1bb.389aa",
+        "type": "comment",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "info": "",
+        "x": 130,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "20570b10.75b05c",
+        "type": "comment",
+        "z": "916196d7.ca91c",
+        "name": "",
+        "info": "",
+        "x": 120,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "e8cc6e6f.893488",
+        "type": "ui_group",
+        "name": "Video Streams",
+        "tab": "1d0e0f33.fa2b09",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "415e2b3.80cfdd4",
+        "type": "ui_group",
+        "name": "Output",
+        "tab": "1d0e0f33.fa2b09",
+        "order": 3,
+        "disp": true,
+        "width": "5",
+        "collapse": false
+    },
+    {
+        "id": "3d882eae.376e82",
+        "type": "ui_group",
+        "name": "File Upload",
+        "tab": "1d0e0f33.fa2b09",
+        "order": 2,
+        "disp": true,
+        "width": "7",
+        "collapse": false
+    },
+    {
+        "id": "1d0e0f33.fa2b09",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]

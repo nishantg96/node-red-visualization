@@ -1,0 +1,645 @@
+[
+    {
+        "id": "8d2e50ac.c52e3",
+        "type": "http request",
+        "z": "b469c66d.5f4698",
+        "name": "get Website HTML",
+        "method": "GET",
+        "ret": "txt",
+        "url": "https://measurements.mobile-alerts.eu/Home/SensorsOverview?phoneid=*****PHONEID HERE*****",
+        "tls": "",
+        "x": 356.00003814697266,
+        "y": 86.85715675354004,
+        "wires": [
+            [
+                "d37f2bf1.eadcc8"
+            ]
+        ]
+    },
+    {
+        "id": "1af4ce80.5e4f22",
+        "type": "inject",
+        "z": "b469c66d.5f4698",
+        "name": "",
+        "topic": "inject",
+        "payload": "inject",
+        "payloadType": "str",
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "30",
+        "x": 161,
+        "y": 92.99999809265137,
+        "wires": [
+            [
+                "8d2e50ac.c52e3"
+            ]
+        ]
+    },
+    {
+        "id": "d37f2bf1.eadcc8",
+        "type": "html",
+        "z": "b469c66d.5f4698",
+        "name": "extract array of sensor-headers and components",
+        "property": "",
+        "tag": ".sensor-header > h3, .sensor-component",
+        "ret": "html",
+        "as": "single",
+        "x": 256,
+        "y": 157.99999809265137,
+        "wires": [
+            [
+                "dc0ba8bf.f0a018",
+                "d0631688.5107d8"
+            ]
+        ]
+    },
+    {
+        "id": "dc0ba8bf.f0a018",
+        "type": "debug",
+        "z": "b469c66d.5f4698",
+        "name": "html parsed",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 596,
+        "y": 137.99999809265137,
+        "wires": []
+    },
+    {
+        "id": "d0631688.5107d8",
+        "type": "function",
+        "z": "b469c66d.5f4698",
+        "name": "Build climate json from array",
+        "func": "  // enter your Sensor name here\n    var tag = \"H2O sensor\";\n   \n    // language dependent tags of different sensors\n    var timetag = \"Timestamp\";\n    var temptag = \"Temperature\";\n    var humidtag = \"Humidity\";\n    var ho2 = \"Water Sensor\";\n   \n    // temporary variables and objects\n    var temp = msg.payload;\n    var found = 0;\n    newPayload = {};\n   \n    // go through array\n    // if sensorname is found then\n    // assign values surrounded by <h4> to JSON\n    for (var i=0; i<temp.length; i++) {\n      if(temp[i].indexOf(tag) > -1) {\n          found = 1;\n          newPayload.name = tag;\n          i++;\n        }\n      if(temp[i].indexOf(\"<a href\") > -1) {\n          found = 0;\n          //node.warn(temp[2])\n        }\n      if (found>-1) {\n          if (temp[i].indexOf(timetag) > -1) {\n             var start = temp[i].indexOf(\"<h4>\") + 4;\n             var end = temp[i].indexOf(\"</h4>\") - start;\n             newPayload.time = temp[i].substr(start, end);\n          }     \n          if (temp[i].indexOf(temptag) > -1) {\n             var start = temp[i].indexOf(\"<h4>\") + 4;\n             var end = temp[i].indexOf(\"</h4>\") - start ;\n             newPayload.temperature = temp[i].substr(start, end);\n          }\n          if (temp[i].indexOf(humidtag) > -1) {\n             var start = temp[i].indexOf(\"<h4>\") + 4;\n             var end = temp[i].indexOf(\"</h4>\") - start;\n             newPayload.humidity = temp[i].substr(start, end);\n            \n          }\n           if (temp[i].indexOf(ho2) > -1) {\n             var start = temp[i].indexOf(\"<h4>\") + 4;\n             var end = temp[i].indexOf(\"</h4>\") - start;\n             newPayload.Ho2 = temp[i].substr(start, end);\n          }\n        }\n    }\n    msg.payload = newPayload;\n    msg.payload.name = tag\n    return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 196,
+        "y": 362.0000023841858,
+        "wires": [
+            [
+                "2ad1598f.893176",
+                "fa7fc645.0fb058",
+                "22973ca1.3117e4",
+                "bf854932.7ad908",
+                "8acbfc17.3b4e6",
+                "2eef5b4d.35e2d4",
+                "3383cab2.b79216",
+                "8693d9fb.95c068"
+            ]
+        ]
+    },
+    {
+        "id": "2ad1598f.893176",
+        "type": "debug",
+        "z": "b469c66d.5f4698",
+        "name": "json",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 133.00000381469727,
+        "y": 506.00000858306885,
+        "wires": []
+    },
+    {
+        "id": "fa7fc645.0fb058",
+        "type": "ui_text",
+        "z": "b469c66d.5f4698",
+        "group": "2455b16b.51118e",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "name": "",
+        "label": "My sensor",
+        "format": "{{msg.payload.name}}",
+        "layout": "row-spread",
+        "x": 562,
+        "y": 219.99999809265137,
+        "wires": []
+    },
+    {
+        "id": "22973ca1.3117e4",
+        "type": "ui_text",
+        "z": "b469c66d.5f4698",
+        "group": "2455b16b.51118e",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Time of capture",
+        "format": "{{msg.payload.time}}",
+        "layout": "row-spread",
+        "x": 573,
+        "y": 260.99999809265137,
+        "wires": []
+    },
+    {
+        "id": "bf854932.7ad908",
+        "type": "ui_text",
+        "z": "b469c66d.5f4698",
+        "group": "2455b16b.51118e",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Temperature",
+        "format": "{{msg.payload.temperature}}",
+        "layout": "row-spread",
+        "x": 572,
+        "y": 298.99999809265137,
+        "wires": []
+    },
+    {
+        "id": "8acbfc17.3b4e6",
+        "type": "ui_text",
+        "z": "b469c66d.5f4698",
+        "group": "2455b16b.51118e",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Humidity",
+        "format": "{{msg.payload.humidity}}",
+        "layout": "row-spread",
+        "x": 562,
+        "y": 335.99999809265137,
+        "wires": []
+    },
+    {
+        "id": "2eef5b4d.35e2d4",
+        "type": "ui_text",
+        "z": "b469c66d.5f4698",
+        "group": "2455b16b.51118e",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Water detector",
+        "format": "{{msg.payload.Ho2}}",
+        "layout": "row-spread",
+        "x": 571,
+        "y": 184.99999809265137,
+        "wires": []
+    },
+    {
+        "id": "d01f9b65.41a238",
+        "type": "send-notification",
+        "z": "b469c66d.5f4698",
+        "name": "",
+        "host": "10.10.14.115",
+        "priority": "info",
+        "icontype": "none",
+        "lifetime": "",
+        "icon": "",
+        "soundId": "none",
+        "soundRepeat": "",
+        "cycles": "1",
+        "x": 854.0000877380371,
+        "y": 585.000078201294,
+        "wires": []
+    },
+    {
+        "id": "3383cab2.b79216",
+        "type": "function",
+        "z": "b469c66d.5f4698",
+        "name": "water check",
+        "func": "\n   \n   \n   \n    // temporary variables and objects\n    var temp = msg.payload;\n    newPayload = {};\n\n      if(temp.Ho2 === \"Humide\") {\n          \n          newPayload = \"Water is leaking\";\n          msg.payload = newPayload;\n          return msg;\n      }\n\n      \n    ",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 469.000093460083,
+        "y": 466.00003707408905,
+        "wires": [
+            [
+                "3ea95b82.d595e4",
+                "91995466.737f28",
+                "cd1274da.55fb58"
+            ]
+        ]
+    },
+    {
+        "id": "3ea95b82.d595e4",
+        "type": "send-notification",
+        "z": "b469c66d.5f4698",
+        "name": "",
+        "host": "10.10.14.115",
+        "priority": "default",
+        "icontype": "alert",
+        "lifetime": "",
+        "icon": "i1077",
+        "soundId": "water1",
+        "soundRepeat": "1",
+        "cycles": "1",
+        "x": 847.0001754760742,
+        "y": 367.00009393692017,
+        "wires": []
+    },
+    {
+        "id": "8693d9fb.95c068",
+        "type": "function",
+        "z": "b469c66d.5f4698",
+        "name": "treansfet temperature",
+        "func": "\n    msg.payload = msg.payload.temperature;\n    return msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 498.000093460083,
+        "y": 650.000037074089,
+        "wires": [
+            [
+                "1b8f2af4.2620c5",
+                "ccc2efea.cb732",
+                "d01f9b65.41a238"
+            ]
+        ]
+    },
+    {
+        "id": "95632f78.22bc2",
+        "type": "ui_button",
+        "z": "b469c66d.5f4698",
+        "name": "check temperature",
+        "group": "d010c910.cb1fd8",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "check temperature",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": " ",
+        "payloadType": "str",
+        "topic": "",
+        "x": 507.0000991821289,
+        "y": 881.0000839233398,
+        "wires": [
+            [
+                "ccc2efea.cb732",
+                "e87ed462.da3f68"
+            ]
+        ]
+    },
+    {
+        "id": "1b8f2af4.2620c5",
+        "type": "debug",
+        "z": "b469c66d.5f4698",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 848.0000915527344,
+        "y": 633.000078201294,
+        "wires": []
+    },
+    {
+        "id": "ccc2efea.cb732",
+        "type": "join",
+        "z": "b469c66d.5f4698",
+        "name": "",
+        "mode": "custom",
+        "build": "string",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": " ",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "20",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 635.0001220703125,
+        "y": 767.0000839233398,
+        "wires": [
+            [
+                "8102b6ea.db68a8",
+                "45737a36.124b04"
+            ]
+        ]
+    },
+    {
+        "id": "8102b6ea.db68a8",
+        "type": "ui_text",
+        "z": "b469c66d.5f4698",
+        "group": "d010c910.cb1fd8",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "name": "New temperature",
+        "label": "New temperature",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 861.0001754760742,
+        "y": 733.000165939331,
+        "wires": []
+    },
+    {
+        "id": "45737a36.124b04",
+        "type": "send-notification",
+        "z": "b469c66d.5f4698",
+        "name": "",
+        "host": "10.10.14.115",
+        "priority": "default",
+        "icontype": "info",
+        "lifetime": "",
+        "icon": "",
+        "soundId": "none",
+        "soundRepeat": "",
+        "cycles": "1",
+        "x": 860.0001678466797,
+        "y": 687.0001220703125,
+        "wires": []
+    },
+    {
+        "id": "747ced8.7118014",
+        "type": "ui_button",
+        "z": "b469c66d.5f4698",
+        "name": "Force water leaking",
+        "group": "d010c910.cb1fd8",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Force water leaking",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "Water is leaking",
+        "payloadType": "str",
+        "topic": "",
+        "x": 492.000093460083,
+        "y": 548.000037074089,
+        "wires": [
+            [
+                "3ea95b82.d595e4",
+                "91995466.737f28",
+                "cd1274da.55fb58"
+            ]
+        ]
+    },
+    {
+        "id": "648c9247.f56c6c",
+        "type": "comment",
+        "z": "b469c66d.5f4698",
+        "name": "LaMetric",
+        "info": "",
+        "x": 834.8517303466797,
+        "y": 232.8272190093994,
+        "wires": []
+    },
+    {
+        "id": "cd1274da.55fb58",
+        "type": "e-mail",
+        "z": "b469c66d.5f4698",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "secure": true,
+        "name": "zema.nodered@gmail.com",
+        "dname": "",
+        "x": 872.5184783935547,
+        "y": 286.49399280548096,
+        "wires": [],
+        "inputLabels": [
+            "msg.payload"
+        ]
+    },
+    {
+        "id": "c06f80d2.efeb8",
+        "type": "comment",
+        "z": "b469c66d.5f4698",
+        "name": "LED",
+        "info": "[{\"id\":\"f878697c.bfaef8\",\"type\":\"inject\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"Turn On\",\"topic\":\"\",\"payload\":\"true\",\"payloadType\":\"bool\",\"repeat\":\"\",\"crontab\":\"\",\"once\":false,\"x\":610,\"y\":360,\"wires\":[[\"d1a537ff.d88008\"]]},{\"id\":\"cd5c9cd6.444ae\",\"type\":\"tcp out\",\"z\":\"d2ffe0e5.3e2f5\",\"host\":\"192.168.188.18\",\"port\":\"5577\",\"beserver\":\"client\",\"base64\":false,\"end\":true,\"name\":\"\",\"x\":1250,\"y\":471,\"wires\":[]},{\"id\":\"d1a537ff.d88008\",\"type\":\"function\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"on\",\"func\":\"msg.payload = new Buffer([0x71,0x23,0x0F,0xA3]);\\nreturn msg;\",\"outputs\":1,\"noerr\":0,\"x\":841,\"y\":362,\"wires\":[[\"cd5c9cd6.444ae\"]]},{\"id\":\"687780ee.2a1da\",\"type\":\"inject\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"Turn Off\",\"topic\":\"\",\"payload\":\"false\",\"payloadType\":\"bool\",\"repeat\":\"\",\"crontab\":\"\",\"once\":false,\"x\":610,\"y\":409,\"wires\":[[\"e90dc315.3796d\"]]},{\"id\":\"e90dc315.3796d\",\"type\":\"function\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"off\",\"func\":\"msg.payload = new Buffer([0x71,0x24,0x0F,0xA4]);\\nreturn msg;\",\"outputs\":1,\"noerr\":0,\"x\":842.5,\"y\":409,\"wires\":[[\"cd5c9cd6.444ae\"]]},{\"id\":\"b3c2955a.8b65a8\",\"type\":\"function\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"RGB(0, 0, 7)\",\"func\":\"msg.payload = new Buffer([0x31,0x00,0x00,0x07,0x00,0x00,0xF0,0x0F,0x37]);\\nreturn msg;\",\"outputs\":1,\"noerr\":0,\"x\":833,\"y\":503,\"wires\":[[\"cd5c9cd6.444ae\"]]},{\"id\":\"9a31f61f.c4ab88\",\"type\":\"inject\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"Everyday 7AM\",\"topic\":\"\",\"payload\":\"false\",\"payloadType\":\"bool\",\"repeat\":\"\",\"crontab\":\"00 12 * * *\",\"once\":false,\"x\":613.5,\"y\":592,\"wires\":[[\"3b2398a7.708fe8\"]]},{\"id\":\"3b2398a7.708fe8\",\"type\":\"function\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"RGB(100, 100, 100)\",\"func\":\"msg.payload = new Buffer([0x31,0xFF,0xFF,0xFF,0x00,0x00,0xF0,0x0F,0x2D]);\\nreturn msg;\",\"outputs\":1,\"noerr\":0,\"x\":852,\"y\":607,\"wires\":[[\"cd5c9cd6.444ae\"]]},{\"id\":\"8df7b99.ab44c48\",\"type\":\"inject\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"Everyday 8PM\",\"topic\":\"\",\"payload\":\"true\",\"payloadType\":\"bool\",\"repeat\":\"\",\"crontab\":\"00 1 * * *\",\"once\":false,\"x\":618.5,\"y\":490,\"wires\":[[\"b3c2955a.8b65a8\"]]},{\"id\":\"7cba5c0f.fd00c4\",\"type\":\"inject\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"Everyday 9AM\",\"topic\":\"\",\"payload\":\"true\",\"payloadType\":\"bool\",\"repeat\":\"\",\"crontab\":\"00 14 * * *\",\"once\":false,\"x\":618,\"y\":529,\"wires\":[[\"b3c2955a.8b65a8\"]]},{\"id\":\"d315d93b.4cbc58\",\"type\":\"inject\",\"z\":\"d2ffe0e5.3e2f5\",\"name\":\"Everyday 5PM\",\"topic\":\"\",\"payload\":\"false\",\"payloadType\":\"bool\",\"repeat\":\"\",\"crontab\":\"00 22 * * *\",\"once\":false,\"x\":616,\"y\":636,\"wires\":[[\"3b2398a7.708fe8\"]]}]",
+        "x": 1648.3338556289673,
+        "y": 324.00001525878906,
+        "wires": []
+    },
+    {
+        "id": "7c1ad9f3.882108",
+        "type": "inject",
+        "z": "b469c66d.5f4698",
+        "name": "Turn On",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 1132.5002841949463,
+        "y": 272.0000410079956,
+        "wires": [
+            [
+                "d0d5958e.e89c98"
+            ]
+        ]
+    },
+    {
+        "id": "1274226e.939bde",
+        "type": "tcp out",
+        "z": "b469c66d.5f4698",
+        "host": "10.10.14.112",
+        "port": "5577",
+        "beserver": "client",
+        "base64": false,
+        "end": true,
+        "name": "",
+        "x": 1646.000358581543,
+        "y": 383.00007343292236,
+        "wires": []
+    },
+    {
+        "id": "d0d5958e.e89c98",
+        "type": "function",
+        "z": "b469c66d.5f4698",
+        "name": "on",
+        "func": "msg.payload = new Buffer([0x71,0x23,0x0F,0xA3]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1356.0002517700195,
+        "y": 284.00004494190216,
+        "wires": [
+            [
+                "1274226e.939bde"
+            ]
+        ]
+    },
+    {
+        "id": "92a7cba.102fc38",
+        "type": "inject",
+        "z": "b469c66d.5f4698",
+        "name": "Turn Off",
+        "topic": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 1125.0002517700195,
+        "y": 331.00004494190216,
+        "wires": [
+            [
+                "bc44b0fc.f1473"
+            ]
+        ]
+    },
+    {
+        "id": "bc44b0fc.f1473",
+        "type": "function",
+        "z": "b469c66d.5f4698",
+        "name": "off",
+        "func": "msg.payload = new Buffer([0x71,0x24,0x0F,0xA4]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1357.5002517700195,
+        "y": 331.00004494190216,
+        "wires": [
+            [
+                "1274226e.939bde"
+            ]
+        ]
+    },
+    {
+        "id": "e87ed462.da3f68",
+        "type": "function",
+        "z": "b469c66d.5f4698",
+        "name": "Force Green",
+        "func": "msg.payload = new Buffer([0x31,0x00,0x00,0x07,0x00,0x00,0xF0,0x0F,0x37]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1362.0002670288086,
+        "y": 663.9999990463257,
+        "wires": [
+            [
+                "1274226e.939bde"
+            ]
+        ]
+    },
+    {
+        "id": "88b64ba9.edbf48",
+        "type": "inject",
+        "z": "b469c66d.5f4698",
+        "name": "Everyday 7AM",
+        "topic": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "00 12 * * *",
+        "once": false,
+        "onceDelay": "",
+        "x": 1103.5002670288086,
+        "y": 396.00009536743164,
+        "wires": [
+            [
+                "91995466.737f28"
+            ]
+        ]
+    },
+    {
+        "id": "91995466.737f28",
+        "type": "function",
+        "z": "b469c66d.5f4698",
+        "name": "Force Red",
+        "func": "msg.payload = new Buffer([0x31,0x00,0x07,0x00,0x00,0x00,0xF0,0x0F,0x37]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1360.0003662109375,
+        "y": 476.0000972747803,
+        "wires": [
+            [
+                "1274226e.939bde"
+            ]
+        ]
+    },
+    {
+        "id": "c8cb1480.b32228",
+        "type": "inject",
+        "z": "b469c66d.5f4698",
+        "name": "Everyday 8PM",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "00 1 * * *",
+        "once": false,
+        "x": 1113.5002746582031,
+        "y": 591.9999961853027,
+        "wires": [
+            [
+                "e87ed462.da3f68"
+            ]
+        ]
+    },
+    {
+        "id": "23a4a794.9ac1e8",
+        "type": "inject",
+        "z": "b469c66d.5f4698",
+        "name": "Everyday 9AM",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "00 14 * * *",
+        "once": false,
+        "x": 1113.0002746582031,
+        "y": 634.9999966621399,
+        "wires": [
+            [
+                "e87ed462.da3f68"
+            ]
+        ]
+    },
+    {
+        "id": "e05915cd.6ae5b8",
+        "type": "inject",
+        "z": "b469c66d.5f4698",
+        "name": "Everyday 5PM",
+        "topic": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "00 22 * * *",
+        "once": false,
+        "x": 1108.0002746582031,
+        "y": 440.0000972747803,
+        "wires": [
+            [
+                "91995466.737f28"
+            ]
+        ]
+    },
+    {
+        "id": "2455b16b.51118e",
+        "type": "ui_group",
+        "z": "",
+        "name": "Real state of the sensor",
+        "tab": "a19604f7.74e948",
+        "disp": true,
+        "width": "8",
+        "collapse": false
+    },
+    {
+        "id": "d010c910.cb1fd8",
+        "type": "ui_group",
+        "z": "",
+        "name": "Forced check",
+        "tab": "a19604f7.74e948",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "a19604f7.74e948",
+        "type": "ui_tab",
+        "z": "",
+        "name": "My Mobile Alerts",
+        "icon": "dashboard"
+    }
+]

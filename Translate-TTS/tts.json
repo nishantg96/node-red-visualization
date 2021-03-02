@@ -1,0 +1,258 @@
+[
+    {
+        "id": "6e30e610.c71c98",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "af7b96e4.3e99e8",
+        "type": "debug",
+        "z": "6e30e610.c71c98",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "speech",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1243,
+        "y": 157,
+        "wires": []
+    },
+    {
+        "id": "22e79790.98d1a8",
+        "type": "function",
+        "z": "6e30e610.c71c98",
+        "name": "Message",
+        "func": "var text = {payload: msg.payload.content};\nreturn text;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 394,
+        "y": 100,
+        "wires": [
+            [
+                "1f963ce1.d86553"
+            ]
+        ]
+    },
+    {
+        "id": "df85ab9e.2c1ab8",
+        "type": "ui_text_input",
+        "z": "6e30e610.c71c98",
+        "name": "",
+        "label": "Enter a text ",
+        "group": "f6a9fdfc.a6263",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "mode": "text",
+        "delay": "0",
+        "topic": "",
+        "x": 132,
+        "y": 127,
+        "wires": [
+            [
+                "1f963ce1.d86553"
+            ]
+        ]
+    },
+    {
+        "id": "20870753.c0fef8",
+        "type": "e-mail in",
+        "z": "6e30e610.c71c98",
+        "name": "",
+        "protocol": "IMAP",
+        "server": "imap.gmail.com",
+        "useSSL": false,
+        "port": "143",
+        "box": "INBOX",
+        "disposition": "None",
+        "criteria": "UNSEEN",
+        "repeat": "60",
+        "fetch": "auto",
+        "inputs": 0,
+        "x": 124.5,
+        "y": 173.5999755859375,
+        "wires": [
+            [
+                "1f963ce1.d86553"
+            ]
+        ]
+    },
+    {
+        "id": "87e23b08.3ee028",
+        "type": "debug",
+        "z": "6e30e610.c71c98",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 910,
+        "y": 222,
+        "wires": []
+    },
+    {
+        "id": "1f963ce1.d86553",
+        "type": "watson-translator",
+        "z": "6e30e610.c71c98",
+        "name": "",
+        "action": "translate",
+        "basemodel": "ar-en",
+        "domain": "general",
+        "srclang": "de",
+        "destlang": "en",
+        "password": "******PASSWORD HERE*******",
+        "apikey": "******APIKEY HERE********",
+        "custom": "",
+        "domainhidden": "general",
+        "srclanghidden": "de",
+        "destlanghidden": "en",
+        "basemodelhidden": "ar-en",
+        "customhidden": "",
+        "filetype": "forcedglossary",
+        "trainid": "",
+        "lgparams2": true,
+        "service-endpoint": "******URL HERE*************",
+        "x": 601.5,
+        "y": 172,
+        "wires": [
+            [
+                "87e23b08.3ee028",
+                "f5257eea.8455",
+                "6e4c0829.1d9a88"
+            ]
+        ]
+    },
+    {
+        "id": "f5257eea.8455",
+        "type": "ui_text",
+        "z": "6e30e610.c71c98",
+        "group": "f6a9fdfc.a6263",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "text",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 881.5,
+        "y": 58,
+        "wires": []
+    },
+    {
+        "id": "1705f3b6.fd509c",
+        "type": "change",
+        "z": "6e30e610.c71c98",
+        "name": "set speech as payload",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "speech",
+                "tot": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "speech",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1216,
+        "y": 242,
+        "wires": [
+            [
+                "d9668038.68ce4"
+            ]
+        ]
+    },
+    {
+        "id": "d9668038.68ce4",
+        "type": "play audio",
+        "z": "6e30e610.c71c98",
+        "name": "",
+        "x": 1211,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "6e4c0829.1d9a88",
+        "type": "watson-text-to-speech",
+        "z": "6e30e610.c71c98",
+        "name": "",
+        "lang": "en-US",
+        "langhidden": "en-US",
+        "langcustom": "NoCustomisationSetting",
+        "langcustomhidden": "",
+        "voice": "en-US_EmilyV3Voice",
+        "voicehidden": "en-US_EmilyV3Voice",
+        "format": "audio/mp3",
+        "password": "*****IBM PASSWORD HERE******",
+        "apikey": "******APIKEY HERE*****",
+        "payload-response": false,
+        "service-endpoint": "*********ENDPOINT URL HERE***********",
+        "x": 998.5,
+        "y": 119,
+        "wires": [
+            [
+                "af7b96e4.3e99e8",
+                "1705f3b6.fd509c"
+            ]
+        ]
+    },
+    {
+        "id": "93bb067c.149648",
+        "type": "telegram receiver",
+        "z": "6e30e610.c71c98",
+        "name": "",
+        "bot": "e89e86c7.896d68",
+        "saveDataDir": "",
+        "x": 139.5,
+        "y": 79,
+        "wires": [
+            [],
+            [
+                "22e79790.98d1a8"
+            ]
+        ]
+    },
+    {
+        "id": "f6a9fdfc.a6263",
+        "type": "ui_group",
+        "name": "Translate & Speak",
+        "tab": "4d2a750a.0a06cc",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "e89e86c7.896d68",
+        "type": "telegram bot",
+        "botname": "BOTNAME HERE",
+        "usernames": "2343322332dab2523-2151-4021-81b2-9fd4628bb352",
+        "chatids": "",
+        "baseapiurl": "",
+        "pollinterval": "300"
+    },
+    {
+        "id": "4d2a750a.0a06cc",
+        "type": "ui_tab",
+        "name": "Text To Speech",
+        "icon": "dashboard",
+        "order": 2
+    }
+]
